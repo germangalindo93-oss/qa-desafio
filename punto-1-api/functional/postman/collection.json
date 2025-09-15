@@ -1,0 +1,284 @@
+{
+	"info": {
+		"_postman_id": "f66d9a00-2e81-4ae4-b4ce-be84e2e3fa5b",
+		"name": "Pruebas_Double_V",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23415728",
+		"_collection_link": "https://www.postman.com/navigation-explorer-14517883/workspace/my-workspace/collection/23415728-f66d9a00-2e81-4ae4-b4ce-be84e2e3fa5b?action=share&source=collection_link&creator=23415728"
+	},
+	"item": [
+		{
+			"name": "Todos_los_productos",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Código de estado es 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const data = pm.response.json();",
+							"",
+							"pm.test(\"Todos los productos son de categoría electronics\", function () {",
+							"    data.forEach(p => pm.expect(p.category).to.eql(\"electronics\"));",
+							"});",
+							"",
+							"pm.test(\"Cada producto tiene los campos esperados\", function () {",
+							"    data.forEach(p => {",
+							"        pm.expect(p).to.have.property(\"id\");",
+							"        pm.expect(p).to.have.property(\"title\");",
+							"        pm.expect(p).to.have.property(\"price\");",
+							"        pm.expect(p).to.have.property(\"description\");",
+							"        pm.expect(p).to.have.property(\"image\");",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://fakestoreapi.com/products/category/electronics",
+					"protocol": "https",
+					"host": [
+						"fakestoreapi",
+						"com"
+					],
+					"path": [
+						"products",
+						"category",
+						"electronics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Producto_por_ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let randomId = Math.floor(Math.random() * (14 - 9 + 1)) + 9;",
+							"",
+							"// Guarda el valor en la variable productId de la colección",
+							"pm.collectionVariables.set(\"productId\", randomId);",
+							"",
+							"console.log(\"Usando productId:\", randomId);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://fakestoreapi.com/products/{{productId}}",
+					"protocol": "https",
+					"host": [
+						"fakestoreapi",
+						"com"
+					],
+					"path": [
+						"products",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear_producto",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Código de estado es 200 o 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							"",
+							"const jsonData = pm.response.json();",
+							"",
+							"pm.test(\"La respuesta contiene el ID del producto\", function () {",
+							"    pm.expect(jsonData).to.have.property(\"id\");",
+							"});",
+							"",
+							"pm.test(\"El producto creado tiene la categoría correcta\", function () {",
+							"    pm.expect(jsonData.category).to.eql(\"electronics\");",
+							"});",
+							"",
+							"// Guardar el ID del producto en variables de colección",
+							"pm.collectionVariables.set(\"createdProductId\", jsonData.id);",
+							"",
+							"console.log(\"ID del producto creado:\", jsonData.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let randomNum = Math.floor(Math.random() * 9000) + 1000;",
+							"// Crea un título único con ese número",
+							"let randomTitle = `Laptop QA Test Automatizdas ${randomNum}`;",
+							"",
+							"// Generar un precio aleatorio entre 500 y 1500 con 2 decimales",
+							"let randomPrice = (Math.random() * (1500 - 500) + 500).toFixed(2);",
+							"",
+							"pm.collectionVariables.set(\"productTitle\", randomTitle);",
+							"pm.collectionVariables.set(\"productPrice\", randomPrice);",
+							"",
+							"console.log(\"Título generado:\", randomTitle);",
+							"console.log(\"Precio generado:\", randomPrice);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"{{productTitle}}\",\n  \"price\": {{productPrice}},\n  \"description\": \"Producto de prueba creado desde Postman por Germán Galindo\",\n  \"category\": \"electronics\",\n  \"image\": \"https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/page/alienware/laptops/aw-16-aurora-aa18250-aa16250-gaming-laptops-overhead-16x9.psd?fmt=png-alpha&wid=1280&hei=720\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://fakestoreapi.com/products",
+					"protocol": "https",
+					"host": [
+						"fakestoreapi",
+						"com"
+					],
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Actualizar_imagen_producto",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Código de estado es 200\", function () {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"const jsonData = pm.response.json();",
+							"",
+							"pm.test(\"La respuesta contiene la nueva imagen\", function () {",
+							"    pm.expect(jsonData).to.have.property(\"image\");",
+							"    pm.expect(jsonData.image).to.eql(\"https://i.imgur.com/xyz1234.png\");",
+							"});",
+							"",
+							"// Confirmar que estamos actualizando el producto correcto",
+							"pm.test(\"El ID corresponde al producto creado\", function () {",
+							"    pm.expect(jsonData.id).to.eql(pm.collectionVariables.get(\"createdProductId\"));",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"image\": \"https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/page/alienware/laptops/aw-16-area51-aa16250-gaming-laptop-rear-lf-trackpad-on-desktop-v2.psd?fmt=jpg&wid=640&hei=360\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://fakestoreapi.com/products/{{createdProductId}}",
+					"protocol": "https",
+					"host": [
+						"fakestoreapi",
+						"com"
+					],
+					"path": [
+						"products",
+						"{{createdProductId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "productId",
+			"value": ""
+		},
+		{
+			"key": "productTitle",
+			"value": ""
+		},
+		{
+			"key": "productPrice",
+			"value": ""
+		},
+		{
+			"key": "createdProductId",
+			"value": ""
+		}
+	]
+}
