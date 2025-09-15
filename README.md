@@ -68,15 +68,3 @@ Casos de prueba: docs/Casos_de_Prueba_Web.docx Contiene todos los casos manuales
 
 👤 Autor
 Germán Enrique Galindo Bermúdez QA / Testing Specialist – Automatización y Pruebas de API
-
-Código
-
----
-
-💡 Con este README:
-- Cualquiera que entre a tu repo sabrá **qué hace el proyecto**, **cómo está organizado** y **cómo ejecutar cada tipo de prueba**.
-- Está alineado con tu estructura actual (`functional`, `performance`, `docs`).
-- Incluye comandos listos para copiar y pegar.
-
-Si quieres, puedo ayudarte a **subir este README directamente a tu repo y hacer el commit/push** para que ya quede visible en GitHub.  
-¿Quieres que lo dejemos listo en tu rama principal?
